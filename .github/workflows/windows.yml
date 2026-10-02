@@ -4,13 +4,14 @@ on:
   # Enable manual run
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - "feature/**"
     tags:
       - "**"
+  pull_request:
     branches:
-      - "**"
-    paths:
-      - .github/workflows/windows.yml
-      - installers/desktop_inno_script.iss
+      - main
 
 jobs:
   build-windows:

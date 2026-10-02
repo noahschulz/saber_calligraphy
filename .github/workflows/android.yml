@@ -4,20 +4,23 @@ on:
   # Enable manual run
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - "feature/**"
     tags:
       - "**"
+  pull_request:
     branches:
-      - "**"
-    paths:
-      - .github/workflows/android.yml
+      - main
 
 jobs:
   build-android:
-    name: Build APK (${{ matrix.foss && 'FOSS' || 'Regular' }})
-    strategy:
-      fail-fast: false
-      matrix:
-        foss: [false, true]
+    name: Build Android APK
+    # Matrix disabled: only building Regular APK (FOSS build commented out)
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     foss: [false, true]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -78,10 +81,11 @@ jobs:
       - name: Disable Flutter CLI animations
         run: flutter config --no-cli-animations
 
-      - run: ./patches/pre/remove_proprietary_dependencies.sh
-        if: matrix.foss
-      - run: patch pubspec.lock < patches/pre/pubspec-fdroid.lock.patch
-        if: matrix.foss
+      # FOSS patches commented out (building regular APK only)
+      # - run: ./patches/pre/remove_proprietary_dependencies.sh
+      #   if: matrix.foss
+      # - run: patch pubspec.lock < patches/pre/pubspec-fdroid.lock.patch
+      #   if: matrix.foss
 
       - name: Build apk
         run: flutter build apk
@@ -90,11 +94,7 @@ jobs:
         id: rename_apk
         run: |
           buildName=$(grep -oP "(?<=buildName = ').*(?=')" lib/data/version.dart)
-          if [ "${{ matrix.foss }}" = "true" ]; then
-            apkName="Saber_FOSS_v${buildName}.apk"
-          else
-            apkName="Saber_v${buildName}.apk"
-          fi
+          apkName="Saber_v${buildName}.apk"
           echo "apkName=$apkName" >> $GITHUB_OUTPUT
 
           mkdir -p output
@@ -103,7 +103,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.foss && 'Saber-Android-FOSS' || 'Saber-Android' }}
+          name: Saber-Android
           path: output/${{ steps.rename_apk.outputs.apkName }}
 
       - name: Upload to GitHub release
@@ -113,75 +113,75 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: output/${{ steps.rename_apk.outputs.apkName }}
 
-      - name: Build aab
-        if: ${{ matrix.foss == false }}
-        run: |
-          flutter build appbundle \
-            --dart-define=FLAVOR="Google Play" \
-            --dart-define=APP_STORE="Google Play" \
-            --dart-define=UPDATE_CHECK="false"
+      # Play Store AAB build commented out (only regular APK needed)
+      # - name: Build aab
+      #   run: |
+      #     flutter build appbundle \
+      #       --dart-define=FLAVOR="Google Play" \
+      #       --dart-define=APP_STORE="Google Play" \
+      #       --dart-define=UPDATE_CHECK="false"
+      #
+      #     mkdir -p output
+      #     mv build/app/outputs/bundle/release/app-release.aab output/Saber.aab
+      #
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: Saber-Android-PlayStore
+      #     path: output/Saber.aab
 
-          mkdir -p output
-          mv build/app/outputs/bundle/release/app-release.aab output/Saber.aab
-
-      - name: Upload artifact
-        if: ${{ matrix.foss == false }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: Saber-Android-PlayStore
-          path: output/Saber.aab
-
-#  upload-to-play-store:
-#    name: Upload to Play Store
-#    runs-on: ubuntu-latest
-#    needs: build-android
-#    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-#    timeout-minutes: 10
-#    steps:
- #     - name: Checkout code
-#        uses: actions/checkout@v7
- #       with:
- #         persist-credentials: false
-
-  #    - name: Download artifact
-   #     uses: actions/download-artifact@v8
-  #      with:
-  #        name: Saber-Android-PlayStore
-  #        path: output
-
-  #    - name: Prepare whatsnew directory from metadata/*/changelogs
-  #      working-directory: ${{ github.workspace }}
-  #      run: |
-          # display changelogs for debugging
-  #        find metadata -name '*.txt'
-
-   #       mkdir -p whatsnew
-
-          # get current version code from lib/data/version.dart
-    #      VERSION_CODE=$(grep -oP '(?<=buildNumber = )\d+' lib/data/version.dart)
-
-          # copy changelogs of each language to whatsnew
-     #     for dir in metadata/*/changelogs; do
-              # get language code from directory name
-              # e.g. metadata/en-US/changelogs -> en-US
-      #        lang=${dir#metadata/}
-       #       lang=${lang%/changelogs}
-
-              # get original changelog file
-        #      original="$dir/$VERSION_CODE.txt"
-
-         #     if [ -f "$original" ]; then
-                # copy changelog file to whatsnew
-          #      cp "$original" "whatsnew/whatsnew-${lang}"
-           #   fi
-         # done
-
-#      - name: Upload to Play Store
-#        uses: r0adkll/upload-google-play@v1
-#        with:
-#          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_JSON }}
-#          packageName: com.adilhanney.saber
-#          releaseFiles: output/Saber.aab
-#          track: production
-#          status: completed
-#          whatsNewDirectory: whatsnew
+  # Play Store upload job commented out
+  # upload-to-play-store:
+  #   name: Upload to Play Store
+  #   runs-on: ubuntu-latest
+  #   needs: build-android
+  #   if: ${{ startsWith(github.ref, 'refs/tags/') }}
+  #   timeout-minutes: 10
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v7
+  #       with:
+  #         persist-credentials: false
+  #
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v8
+  #       with:
+  #         name: Saber-Android-PlayStore
+  #         path: output
+  #
+  #     - name: Prepare whatsnew directory from metadata/*/changelogs
+  #       working-directory: ${{ github.workspace }}
+  #       run: |
+  #         # display changelogs for debugging
+  #         find metadata -name '*.txt'
+  #
+  #         mkdir -p whatsnew
+  #
+  #         # get current version code from lib/data/version.dart
+  #         VERSION_CODE=$(grep -oP '(?<=buildNumber = )\d+' lib/data/version.dart)
+  #
+  #         # copy changelogs of each language to whatsnew
+  #         for dir in metadata/*/changelogs; do
+  #             # get language code from directory name
+  #             # e.g. metadata/en-US/changelogs -> en-US
+  #             lang=${dir#metadata/}
+  #             lang=${lang%/changelogs}
+  #
+  #             # get original changelog file
+  #             original="$dir/$VERSION_CODE.txt"
+  #
+  #             if [ -f "$original" ]; then
+  #               # copy changelog file to whatsnew
+  #               cp "$original" "whatsnew/whatsnew-${lang}"
+  #             fi
+  #         done
+  #
+  #     - name: Upload to Play Store
+  #       uses: r0adkll/upload-google-play@v1
+  #       with:
+  #         serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_JSON }}
+  #         packageName: com.adilhanney.saber
+  #         releaseFiles: output/Saber.aab
+  #         track: production
+  #         status: completed
+  #         whatsNewDirectory: whatsnew
