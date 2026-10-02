@@ -54,7 +54,7 @@ class _Translations$common$ca extends Translations$common$en {
 
 	// Translations
 	@override String get done => 'Fet';
-	@override String get continueBtn => 'Procedeix';
+	@override String get continueBtn => 'Continua';
 	@override String get cancel => 'Cancel·la';
 }
 
@@ -70,7 +70,7 @@ class _Translations$home$ca extends Translations$home$en {
 	@override late final _Translations$home$tooltips$ca tooltips = _Translations$home$tooltips$ca._(_root);
 	@override late final _Translations$home$create$ca create = _Translations$home$create$ca._(_root);
 	@override String get welcome => 'Benvingut/d@ a Saber';
-	@override String get invalidFormat => 'L\'arxiu seleccionat no és compatible.\nSiusplau, proveu-ho des d\'un dels següents formats: sbn, sbn2, sba o PDF';
+	@override String get invalidFormat => 'L\'arxiu seleccionat no és compatible. Seleccioneu un arxiu en format sbn, sbn2, sba o PDF';
 	@override String get noFiles => 'Cap arxiu trobat';
 	@override String get noPreviewAvailable => 'Previsualització no disponible';
 	@override String get createNewNote => 'Prem + per a crear una nota nova';
@@ -814,7 +814,7 @@ class _Translations$sentry$consent$description$ca extends Translations$sentry$co
 	final TranslationsCa _root; // ignore: unused_field
 
 	// Translations
-	@override String get currentlyOff => 'Si acceptes, els informes d\'errors s\'activaran un cop reiniciada l\'app';
+	@override String get currentlyOff => 'Si acceptesu, els informes d\'errors s\'activaran un cop reiniciada l\'app';
 	@override TextSpan learnMoreInPrivacyPolicy({required InlineSpanBuilder link}) => TextSpan(children: [
 		const TextSpan(text: 'Més informació a '),
 		link('privacy policy'),

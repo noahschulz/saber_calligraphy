@@ -172,6 +172,7 @@ class _Translations$profile$fr extends Translations$profile$en {
 	@override String get title => 'Mon profil';
 	@override String get logout => 'Déconnexion';
 	@override String quotaUsage({required Object used, required Object total, required Object percent}) => 'Vous utilisez ${used} sur ${total} (${percent}%)';
+	@override String quotaUsageUncapped({required Object used}) => 'Vous utilisez ${used}';
 	@override String get connectedTo => 'Connecté à';
 	@override late final _Translations$profile$quickLinks$fr quickLinks = _Translations$profile$quickLinks$fr._(_root);
 	@override String get faqTitle => 'Foire aux questions';
@@ -181,7 +182,6 @@ class _Translations$profile$fr extends Translations$profile$en {
 		_Translations$profile$faq$2$fr._(_root),
 		_Translations$profile$faq$3$fr._(_root),
 	];
-	@override String quotaUsageUncapped({required Object used}) => 'Vous utilisez ${used}';
 }
 
 // Path: appInfo
@@ -311,7 +311,7 @@ class _Translations$home$renameNote$fr extends Translations$home$renameNote$en {
 	@override String get noteNameEmpty => 'Le nom de note ne peut pas être vide';
 	@override String get noteNameExists => 'Une note du même nom existe déjà';
 	@override String get noteNameForbiddenCharacters => 'Le nom de la note contient des caractères interdits';
-	@override String get noteNameReserved => 'Nom de la note réservé';
+	@override String get noteNameReserved => 'Le nom de la note est réservé';
 }
 
 // Path: home.moveNote

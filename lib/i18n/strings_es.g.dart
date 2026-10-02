@@ -335,11 +335,11 @@ class _Translations$home$deleteNoteDialog$es extends Translations$home$deleteNot
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
+	@override String deleteNotes({required Object n}) => 'Eliminar ${n} notas';
 	@override String confirmDelete({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(n,
 		other: '¿Desea eliminar la nota seleccionada de forma permanente?',
 	);
 	@override String get delete => 'Eliminar';
-	@override String deleteNotes({required Object n}) => 'Eliminar ${n} notas';
 	@override String deleteName({required Object f}) => 'Borrar ${f}';
 }
 

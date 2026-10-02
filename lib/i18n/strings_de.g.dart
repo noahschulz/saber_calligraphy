@@ -383,8 +383,8 @@ class _Translations$home$sort$de extends Translations$home$sort$en {
 	// Translations
 	@override String get sortBy => 'Sortieren nach';
 	@override String get nameAToZ => 'Name (A-Z)';
-	@override String get nameZToA => 'Name (A-Z)';
-	@override String get lastModifiedNewToOld => 'Bearbeitet (Neuestes zuerst)';
+	@override String get nameZToA => 'Name (Z-A)';
+	@override String get lastModifiedNewToOld => 'Bearbeitet (Neueste zuerst)';
 	@override String get lastModifiedOldToNew => 'Bearbeitet (Älteste zuerst)';
 }
 
